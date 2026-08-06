@@ -25,6 +25,7 @@ export default function RankingPage() {
   const ready = useRequireOnboarding();
   const [tab, setTab] = useState<Tab>("ranking");
   const [newFriendName, setNewFriendName] = useState("");
+
   const friends = useTitanStore((s) => s.friends);
   const friendRequests = useTitanStore((s) => s.friendRequests);
   const sendFriendRequest = useTitanStore((s) => s.sendFriendRequest);
@@ -35,6 +36,7 @@ export default function RankingPage() {
   const streak = useTitanStore((s) => s.streak);
   const profile = useTitanStore((s) => s.profile);
   const userCommitmentIndex = useTitanStore((s) => s.userCommitmentIndex);
+
   const { level } = xpToLevel(xp);
   const firstName = profile.name?.split(" ")[0] ?? "Tú";
 
@@ -43,11 +45,14 @@ export default function RankingPage() {
   const acceptedFriends = friends.filter((f) => f.status === "accepted");
   const pendingReceived = friendRequests.filter((r) => r.status === "pending_received");
 
-  // Build ranking: user + accepted friends
   const meRow = {
-    id: "me", name: `${firstName} (tú)`,
-    level, commitmentIndex: userCommitmentIndex,
-    streak, position: 0, isMe: true,
+    id: "me",
+    name: `${firstName} (tú)`,
+    level,
+    commitmentIndex: userCommitmentIndex,
+    streak,
+    position: 0,
+    isMe: true,
   };
 
   const rankRows = [
@@ -83,10 +88,15 @@ export default function RankingPage() {
       {/* Tabs */}
       <div className="flex gap-2">
         {tabs.map((t) => (
-          <button key={t.id} onClick={() => setTab(t.id)}
+          <button
+            key={t.id}
+            onClick={() => setTab(t.id)}
             className={`flex-1 rounded-full py-2.5 text-[12px] font-bold transition-all ${
-              tab === t.id ? "bg-accent text-black" : "border border-border bg-glass text-text-dim"
-            }`}>
+              tab === t.id
+                ? "bg-accent text-black"
+                : "border border-border bg-glass text-text-dim"
+            }`}
+          >
             {t.icon} {t.label}
           </button>
         ))}
@@ -113,7 +123,9 @@ export default function RankingPage() {
           ) : (
             <>
               <GlassCard className="p-4">
-                <div className="text-[11px] font-bold text-text-dim mb-2">Índice de compromiso</div>
+                <div className="text-[11px] font-bold text-text-dim mb-2">
+                  Índice de compromiso
+                </div>
                 <div className="grid grid-cols-5 gap-1.5">
                   {[
                     { label: "Entrenos", pct: 40, color: "bg-accent" },
@@ -133,17 +145,26 @@ export default function RankingPage() {
 
               <div className="flex flex-col gap-2">
                 {rankRows.map((row, i) => (
-                  <motion.div key={row.id}
-                    initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.04 }}>
-                    <GlassCard className={`p-3.5 ${row.isMe ? "border-accent/50 bg-accent-dim" : ""}`}>
+                  <motion.div
+                    key={row.id}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                  >
+                    <GlassCard
+                      className={`p-3.5 ${row.isMe ? "border-accent/50 bg-accent-dim" : ""}`}
+                    >
                       <div className="flex items-center gap-3">
                         <Medal pos={row.position} />
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border-strong bg-glass text-[12px] font-bold">
                           {row.name[0]}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <div className={`text-[14px] font-semibold ${row.isMe ? "text-accent" : ""}`}>
+                          <div
+                            className={`text-[14px] font-semibold ${
+                              row.isMe ? "text-accent" : ""
+                            }`}
+                          >
                             {row.name}
                           </div>
                           <div className="text-[11px] text-text-dim">
@@ -151,12 +172,18 @@ export default function RankingPage() {
                           </div>
                         </div>
                         <div className="shrink-0 text-right">
-                          <div className="text-[15px] font-extrabold">{row.commitmentIndex}%</div>
+                          <div className="text-[15px] font-extrabold">
+                            {row.commitmentIndex}%
+                          </div>
                         </div>
                       </div>
                       <div className="mt-2.5 h-1 overflow-hidden rounded-full bg-white/8">
-                        <div className={`h-full rounded-full transition-all duration-700 ${row.isMe ? "bg-accent" : "bg-white/30"}`}
-                          style={{ width: `${row.commitmentIndex}%` }} />
+                        <div
+                          className={`h-full rounded-full transition-all duration-700 ${
+                            row.isMe ? "bg-accent" : "bg-white/30"
+                          }`}
+                          style={{ width: `${row.commitmentIndex}%` }}
+                        />
                       </div>
                     </GlassCard>
                   </motion.div>
@@ -177,15 +204,20 @@ export default function RankingPage() {
                 Solicitudes pendientes ({pendingReceived.length})
               </div>
               {pendingReceived.map((req) => (
-                <GlassCard key={req.id} className="flex items-center gap-3 p-3.5 mb-2">
+                <GlassCard
+                  key={req.id}
+                  className="flex items-center gap-3 p-3.5 mb-2"
+                >
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-glass text-[13px] font-bold">
                     {req.name[0]}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-[14px] font-semibold">{req.name}</div>
                   </div>
-                  <button onClick={() => acceptFriendRequest(req.id)}
-                    className="rounded-full bg-accent px-3 py-1.5 text-[11px] font-bold text-black">
+                  <button
+                    onClick={() => acceptFriendRequest(req.id)}
+                    className="rounded-full bg-accent px-3 py-1.5 text-[11px] font-bold text-black"
+                  >
                     Aceptar
                   </button>
                 </GlassCard>
@@ -211,7 +243,7 @@ export default function RankingPage() {
             </button>
           </div>
 
-          {/* Amigos aceptados */}
+          {/* Lista amigos */}
           {acceptedFriends.length === 0 ? (
             <GlassCard className="p-5 text-center">
               <div className="text-[28px] mb-2">🤝</div>
@@ -222,7 +254,11 @@ export default function RankingPage() {
             </GlassCard>
           ) : (
             acceptedFriends.map((f) => (
-              <motion.div key={f.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}>
+              <motion.div
+                key={f.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+              >
                 <GlassCard className="flex items-center gap-3 p-3.5">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-glass text-[14px] font-bold">
                     {f.name[0]}
@@ -244,13 +280,20 @@ export default function RankingPage() {
             ))
           )}
 
-          {/* Feed */}
+          {/* Feed de actividad */}
           {feed.length > 0 && (
             <div>
-              <div className="mb-2 px-1 text-[12px] font-bold text-text-dim">Actividad reciente</div>
+              <div className="mb-2 px-1 text-[12px] font-bold text-text-dim">
+                Actividad reciente
+              </div>
               {feed.map((item, i) => (
-                <motion.div key={item.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }} className="mb-2">
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="mb-2"
+                >
                   <GlassCard className="flex items-start gap-3 p-3.5">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-glass text-sm font-bold">
                       {item.userName[0]}
@@ -260,7 +303,9 @@ export default function RankingPage() {
                         <span className="font-semibold">{item.userName}</span>{" "}
                         <span className="text-text-dim">{item.action}</span>
                       </div>
-                      <div className="mt-0.5 text-[11px] text-text-dimmer">{item.timestamp}</div>
+                      <div className="mt-0.5 text-[11px] text-text-dimmer">
+                        {item.timestamp}
+                      </div>
                     </div>
                   </GlassCard>
                 </motion.div>
@@ -276,16 +321,21 @@ export default function RankingPage() {
           <GlassCard className="p-4">
             <div className="text-[13px] font-bold">⚔️ Duelos de fin de semana</div>
             <div className="mt-1 text-[12px] text-text-dim leading-relaxed">
-              Los duelos se crean automáticamente cada sábado. Gana quien acumule más pasos, actividad o puntos — los datos vienen exclusivamente de tu reloj inteligente.
+              Los duelos se crean automáticamente cada sábado. Gana quien acumule más pasos,
+              actividad o puntos — los datos vienen exclusivamente de tu reloj inteligente.
             </div>
           </GlassCard>
 
           {acceptedFriends.length === 0 ? (
             <GlassCard className="p-5 text-center">
               <div className="text-[28px] mb-2">👥</div>
-              <div className="text-[12px] text-text-dim">Necesitas al menos un amigo para lanzar un duelo</div>
-              <button onClick={() => setTab("amigos")}
-                className="mt-3 rounded-full border border-border-strong px-4 py-2 text-[12px] font-semibold">
+              <div className="text-[12px] text-text-dim">
+                Necesitas al menos un amigo para lanzar un duelo
+              </div>
+              <button
+                onClick={() => setTab("amigos")}
+                className="mt-3 rounded-full border border-border-strong px-4 py-2 text-[12px] font-semibold"
+              >
                 Añadir amigos
               </button>
             </GlassCard>
@@ -293,9 +343,13 @@ export default function RankingPage() {
             <GlassCard className="flex flex-col items-center gap-2 p-5 text-center">
               <div className="text-[32px]">🏆</div>
               <div className="text-[14px] font-bold">Duelo disponible el sábado</div>
-              <div className="text-[12px] text-text-dim">Vuelve el fin de semana para lanzar un duelo</div>
-              <button disabled
-                className="mt-2 rounded-full bg-accent/40 px-6 py-3 text-[13px] font-bold text-black/60 cursor-not-allowed">
+              <div className="text-[12px] text-text-dim">
+                Vuelve el fin de semana para lanzar un duelo
+              </div>
+              <button
+                disabled
+                className="mt-2 rounded-full bg-accent/40 px-6 py-3 text-[13px] font-bold text-black/60 cursor-not-allowed"
+              >
                 Disponible el sábado
               </button>
             </GlassCard>

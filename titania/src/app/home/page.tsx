@@ -64,16 +64,17 @@ export default function HomePage() {
   const firstName = profile.name?.split(" ")[0] ?? "Campeón";
   const hour = new Date().getHours();
   const greeting = hour < 13 ? "Buenos días" : hour < 20 ? "Buenas tardes" : "Buenas noches";
-  const dateStr = new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
+  const dateStr = new Date().toLocaleDateString("es-ES", {
+    weekday: "long", day: "numeric", month: "long",
+  });
 
-  // Targets based on profile
-  const targetKcal = 2200;
   const targetProtein = parseInt(profile.weight ?? "70") * 2;
   const targetWater = 2.5;
   const targetSteps = 10000;
 
   const dailyChallenges = challenges.filter((c) => c.type === "daily" && !c.completed).slice(0, 2);
   const watchConnected = healthSource !== "none";
+  const acceptedFriends = friends.filter((f) => f.status === "accepted");
 
   return (
     <>
@@ -102,15 +103,19 @@ export default function HomePage() {
             {streak > 0 && (
               <div className="flex items-center gap-1.5 rounded-full border border-orange/30 bg-orange-dim px-3 py-1.5">
                 <span className="text-[13px]">🔥</span>
-                <span className="text-[12px] font-bold text-orange">{streak} día{streak !== 1 ? "s" : ""}</span>
+                <span className="text-[12px] font-bold text-orange">
+                  {streak} día{streak !== 1 ? "s" : ""}
+                </span>
               </div>
             )}
-            {friends.length > 0 && (
+            {acceptedFriends.length > 0 && (
               <button
                 onClick={() => router.push("/ranking")}
                 className="flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent-dim px-3 py-1.5"
               >
-                <span className="text-[12px] font-bold text-accent">👥 {friends.filter(f => f.status === "accepted").length} amigos</span>
+                <span className="text-[12px] font-bold text-accent">
+                  👥 {acceptedFriends.length} amigo{acceptedFriends.length !== 1 ? "s" : ""}
+                </span>
               </button>
             )}
             {userCommitmentIndex > 0 && (
@@ -124,18 +129,18 @@ export default function HomePage() {
           </div>
         </motion.div>
 
-        {/* Health connect banner */}
+        {/* Banner: conectar reloj */}
         {!watchConnected && (
           <motion.div {...fadeUp} transition={{ duration: 0.35, delay: 0.03 }}>
             <button
-              onClick={() => router.push("/perfil?tab=salud")}
+              onClick={() => router.push("/perfil")}
               className="flex w-full items-center gap-3 rounded-[20px] border border-warning/30 bg-warning-dim p-4 text-left"
             >
               <span className="text-[22px]">⌚</span>
               <div className="flex-1 min-w-0">
                 <div className="text-[13px] font-bold text-warning">Conecta tu reloj inteligente</div>
                 <div className="text-[11.5px] text-text-dim mt-0.5">
-                  Sin reloj, no puedes confirmar retos ni sumar puntos por actividad
+                  Sin reloj no puedes confirmar retos ni sumar puntos por actividad
                 </div>
               </div>
               <span className="text-[12px] text-warning shrink-0">→</span>
@@ -151,7 +156,9 @@ export default function HomePage() {
               {watchConnected && (
                 <div className="flex items-center gap-1 rounded-full border border-success/30 bg-success-dim px-2.5 py-1">
                   <div className="h-1.5 w-1.5 rounded-full bg-success" />
-                  <span className="text-[10px] font-semibold text-success">{SOURCE_LABELS[healthSource]}</span>
+                  <span className="text-[10px] font-semibold text-success">
+                    {SOURCE_LABELS[healthSource]}
+                  </span>
                 </div>
               )}
             </div>
@@ -161,7 +168,7 @@ export default function HomePage() {
                   icon: "🔥", color: "var(--color-orange)",
                   pct: Math.min(Math.round((dailyStats.caloriesBurned / 500) * 100), 100),
                   value: String(dailyStats.caloriesBurned),
-                  label: "kcal quemadas",
+                  label: "kcal",
                 },
                 {
                   icon: "💧", color: "var(--color-blue)",
@@ -179,7 +186,7 @@ export default function HomePage() {
                   icon: "💪", color: "var(--color-accent)",
                   pct: Math.min(Math.round((dailyStats.proteinGrams / targetProtein) * 100), 100),
                   value: `${dailyStats.proteinGrams}g`,
-                  label: `de ${targetProtein}g`,
+                  label: `prot.`,
                 },
               ].map((ring) => (
                 <div key={ring.label} className="flex flex-col items-center gap-1.5">
@@ -243,27 +250,29 @@ export default function HomePage() {
               {dailyChallenges.map((c) => {
                 const pct = Math.min(Math.round((c.progress / c.target) * 100), 100);
                 return (
-                  <button
-                    key={c.id}
-                    onClick={() => router.push("/retos")}
-                    className="w-full text-left"
-                  >
+                  <button key={c.id} onClick={() => router.push("/retos")} className="w-full text-left">
                     <GlassCard className="p-3.5">
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2">
                             <span className="text-[13px] font-semibold">{c.title}</span>
                             {c.requiresWatch && !watchConnected && (
-                              <span className="text-[9px] font-bold text-warning bg-warning-dim border border-warning/30 rounded-full px-1.5 py-0.5">⌚</span>
+                              <span className="text-[9px] font-bold text-warning bg-warning-dim border border-warning/30 rounded-full px-1.5 py-0.5">
+                                ⌚
+                              </span>
                             )}
                           </div>
                           <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/10">
-                            <div className="h-full rounded-full bg-accent transition-all duration-500"
-                              style={{ width: `${pct}%` }} />
+                            <div
+                              className="h-full rounded-full bg-accent transition-all duration-500"
+                              style={{ width: `${pct}%` }}
+                            />
                           </div>
                         </div>
                         <div className="shrink-0 text-right">
-                          <div className="tabular-nums text-[12px] font-bold text-accent">+{c.xpReward} XP</div>
+                          <div className="tabular-nums text-[12px] font-bold text-accent">
+                            +{c.xpReward} XP
+                          </div>
                           <div className="text-[10px] text-text-dimmer">{pct}%</div>
                         </div>
                       </div>
@@ -275,10 +284,9 @@ export default function HomePage() {
           </motion.div>
         )}
 
-        {/* Stats rápidos + accesos rápidos */}
+        {/* Estadísticas rápidas */}
         <motion.div {...fadeUp} transition={{ duration: 0.35, delay: 0.2 }}>
           <div className="grid grid-cols-2 gap-2.5">
-            {/* Agua */}
             <button onClick={() => router.push("/progreso")} className="text-left">
               <GlassCard className="p-3.5">
                 <div className="text-[16px]">💧</div>
@@ -289,12 +297,13 @@ export default function HomePage() {
                   de {targetWater}L agua
                 </div>
                 <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/8">
-                  <div className="h-full rounded-full bg-blue transition-all duration-700"
-                    style={{ width: `${Math.min((dailyStats.water / targetWater) * 100, 100)}%` }} />
+                  <div
+                    className="h-full rounded-full bg-blue transition-all duration-700"
+                    style={{ width: `${Math.min((dailyStats.water / targetWater) * 100, 100)}%` }}
+                  />
                 </div>
               </GlassCard>
             </button>
-            {/* Sueño */}
             <button onClick={() => router.push("/progreso")} className="text-left">
               <GlassCard className="p-3.5">
                 <div className="text-[16px]">🌙</div>
@@ -302,11 +311,13 @@ export default function HomePage() {
                   {dailyStats.sleepHours > 0 ? `${dailyStats.sleepHours}h` : "—"}
                 </div>
                 <div className="mt-0.5 text-[10px] font-semibold text-text-dim">
-                  {dailyStats.sleepHours > 0 ? "de sueño" : "Sin datos de sueño"}
+                  {dailyStats.sleepHours > 0 ? "de sueño" : "Sin datos"}
                 </div>
                 <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/8">
-                  <div className="h-full rounded-full bg-purple transition-all duration-700"
-                    style={{ width: `${Math.min((dailyStats.sleepHours / 8) * 100, 100)}%` }} />
+                  <div
+                    className="h-full rounded-full bg-purple transition-all duration-700"
+                    style={{ width: `${Math.min((dailyStats.sleepHours / 8) * 100, 100)}%` }}
+                  />
                 </div>
               </GlassCard>
             </button>
@@ -345,8 +356,12 @@ export default function HomePage() {
                   </div>
                   <p className="text-[13.5px] leading-[1.55] text-white/88">
                     {dailyStats.steps === 0 && dailyStats.water === 0
-                      ? "Empieza el día registrando tu actividad. Pregúntame lo que necesites — estoy aquí para ayudarte a alcanzar tu objetivo. 💬"
-                      : `Hoy llevas ${dailyStats.steps.toLocaleString("es")} pasos y ${dailyStats.water.toFixed(1)}L de agua. ${dailyStats.water < targetWater ? `Te faltan ${(targetWater - dailyStats.water).toFixed(1)}L para completar tu objetivo hídrico.` : "¡Hidratación completada! 💧"}`}
+                      ? "Empieza el día registrando tu actividad. Pregúntame lo que necesites. 💬"
+                      : `Llevas ${dailyStats.steps.toLocaleString("es")} pasos y ${dailyStats.water.toFixed(1)}L de agua. ${
+                          dailyStats.water < targetWater
+                            ? `Te faltan ${(targetWater - dailyStats.water).toFixed(1)}L para cumplir tu objetivo hídrico.`
+                            : "¡Hidratación completada! 💧"
+                        }`}
                   </p>
                 </div>
               </div>
