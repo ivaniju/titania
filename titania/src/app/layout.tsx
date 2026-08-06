@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Titan",
-  description: "Tu entrenador personal. Configura tu vida una vez.",
+  title: "Titania — Tu entrenador personal",
+  description: "Fitness de nivel comercial. Entrena, come bien y compite con tus amigos.",
 };
 
 export const viewport: Viewport = {
@@ -11,6 +11,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   themeColor: "#000000",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

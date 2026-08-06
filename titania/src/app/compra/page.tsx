@@ -12,6 +12,7 @@ export default function CompraPage() {
   const shoppingList = useTitanStore((s) => s.shoppingList);
   const toggleShoppingItem = useTitanStore((s) => s.toggleShoppingItem);
   const resetShoppingList = useTitanStore((s) => s.resetShoppingList);
+  const profile = useTitanStore((s) => s.profile);
 
   const { grouped, pct, allDone } = useMemo(() => {
     const grouped: Record<string, typeof shoppingList> = {};
@@ -26,14 +27,23 @@ export default function CompraPage() {
 
   if (!ready) return null;
 
-  return (
-    <div className="flex min-h-dvh flex-col gap-4 px-5 pb-[110px]">
-      <ScreenHeader title="Lista de la compra" subtitle="Semana actual · Mercadona" />
+  const market = profile.supermarket ?? "tu supermercado";
 
-      <div className="sticky top-0 z-10 -mx-5 bg-bg/90 px-5 pb-3 pt-1 backdrop-blur-md">
+  return (
+    <div className="flex min-h-dvh flex-col gap-4 px-4 pb-[110px]">
+      <ScreenHeader
+        title="Lista de la compra"
+        subtitle={`Semana actual · ${market}`}
+      />
+
+      {/* Progress sticky */}
+      <div className="sticky top-0 z-10 -mx-4 bg-bg/90 px-4 pb-3 pt-1 backdrop-blur-md">
         <div className="flex items-center justify-between text-[12px] font-semibold text-text-dim">
           <span>{pct}% completado</span>
-          <button onClick={resetShoppingList} className="text-text-dimmer underline">
+          <button
+            onClick={resetShoppingList}
+            className="text-text-dimmer underline underline-offset-2"
+          >
             Reiniciar
           </button>
         </div>
@@ -47,7 +57,7 @@ export default function CompraPage() {
 
       {allDone && (
         <div className="rounded-[20px] border border-accent bg-accent-dim p-4 text-center text-[13.5px] font-semibold text-accent">
-          Compra completada 🛒
+          🛒 Compra completada
         </div>
       )}
 
@@ -62,23 +72,21 @@ export default function CompraPage() {
                 <button
                   key={item.id}
                   onClick={() => toggleShoppingItem(item.id)}
-                  className="flex w-full items-center gap-3 rounded-[14px] border border-border bg-glass px-4 py-3.5 text-left"
+                  className="flex w-full items-center gap-3 rounded-[14px] border border-border bg-glass px-4 py-3.5 text-left transition-all active:scale-[0.98]"
                 >
                   <span
-                    className={
-                      "flex h-6 w-6 shrink-0 items-center justify-center rounded-[7px] border text-[13px] font-bold " +
-                      (item.checked
+                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-[7px] border text-[13px] font-bold transition-all ${
+                      item.checked
                         ? "border-accent bg-accent text-black"
-                        : "border-border-strong text-transparent")
-                    }
+                        : "border-border-strong text-transparent"
+                    }`}
                   >
                     ✓
                   </span>
                   <span
-                    className={
-                      "text-[14px] " +
-                      (item.checked ? "text-text-dimmer line-through" : "text-text")
-                    }
+                    className={`text-[14px] transition-all ${
+                      item.checked ? "text-text-dimmer line-through" : "text-text"
+                    }`}
                   >
                     {item.name}
                   </span>

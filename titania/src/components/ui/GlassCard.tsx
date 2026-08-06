@@ -1,15 +1,13 @@
 import { clsx } from "clsx";
 import type { ReactNode } from "react";
 
-export function GlassCard({
-  children,
-  className,
-  strong = false,
-}: {
+type GlassCardProps = {
   children: ReactNode;
   className?: string;
   strong?: boolean;
-}) {
+};
+
+function GlassCardDiv({ children, className, strong }: GlassCardProps) {
   return (
     <div
       className={clsx(
@@ -20,5 +18,17 @@ export function GlassCard({
     >
       {children}
     </div>
+  );
+}
+
+export function GlassCard({
+  children,
+  className,
+  strong = false,
+}: GlassCardProps) {
+  return (
+    <GlassCardDiv strong={strong} className={className}>
+      {children}
+    </GlassCardDiv>
   );
 }
