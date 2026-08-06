@@ -10,7 +10,10 @@ import { Chip } from "@/components/ui/Chip";
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { stepIndex, history, answerStep, completeOnboarding } = useTitanStore();
+  const stepIndex = useTitanStore((s) => s.stepIndex);
+  const history = useTitanStore((s) => s.history);
+  const answerStep = useTitanStore((s) => s.answerStep);
+  const completeOnboarding = useTitanStore((s) => s.completeOnboarding);
   const [freeText, setFreeText] = useState("");
   const bodyRef = useRef<HTMLDivElement>(null);
 

@@ -120,7 +120,8 @@ function ExerciseRow({ exercise }: { exercise: Exercise }) {
 
 export default function EntrenamientoPage() {
   const ready = useRequireOnboarding();
-  const { todayWorkout, completeWorkout } = useTitanStore();
+  const todayWorkout = useTitanStore((s) => s.todayWorkout);
+  const completeWorkout = useTitanStore((s) => s.completeWorkout);
 
   if (!ready) return null;
 
@@ -137,7 +138,7 @@ export default function EntrenamientoPage() {
   return (
     <>
       <AchievementToast />
-      <div className="flex min-h-dvh flex-col gap-4 px-4 pb-[110px]">
+      <div className="flex min-h-dvh flex-col gap-4 px-4 pb-[100px]">
         <ScreenHeader title={todayWorkout.title} subtitle={todayWorkout.meta} />
 
         {/* Progreso general */}
