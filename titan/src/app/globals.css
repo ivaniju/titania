@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+:root {
+  --color-bg: #000000;
+  --color-text: #ffffff;
+  --color-text-dim: rgba(255, 255, 255, 0.52);
+  --color-text-dimmer: rgba(255, 255, 255, 0.32);
+  --color-accent: #c6ff00;
+  --color-accent-dim: rgba(198, 255, 0, 0.14);
+  --color-glass: rgba(255, 255, 255, 0.055);
+  --color-glass-strong: rgba(255, 255, 255, 0.09);
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-strong: rgba(255, 255, 255, 0.16);
+
+  --radius-lg: 28px;
+  --radius-md: 20px;
+  --radius-sm: 14px;
+
+  /* En producción, sustituir por next/font/google (Inter) — ver README.
+     Aquí usamos la pila del sistema porque este entorno no tiene acceso
+     a fonts.googleapis.com. Visualmente es prácticamente idéntica. */
+  --font-app: -apple-system, "SF Pro Display", "Inter", "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-text: var(--color-text);
+  --color-text-dim: var(--color-text-dim);
+  --color-text-dimmer: var(--color-text-dimmer);
+  --color-accent: var(--color-accent);
+  --color-accent-dim: var(--color-accent-dim);
+  --color-glass: var(--color-glass);
+  --color-glass-strong: var(--color-glass-strong);
+  --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
+
+  --radius-lg: var(--radius-lg);
+  --radius-md: var(--radius-md);
+  --radius-sm: var(--radius-sm);
+
+  --font-sans: var(--font-app);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  overscroll-behavior-y: none;
+}
+
+body {
+  font-family: var(--font-app);
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
