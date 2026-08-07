@@ -10,10 +10,8 @@ import { Chip } from "@/components/ui/Chip";
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const stepIndex = useTitanStore((s) => s.stepIndex);
-  const history = useTitanStore((s) => s.history);
-  const answerStep = useTitanStore((s) => s.answerStep);
-  const completeOnboarding = useTitanStore((s) => s.completeOnboarding);
+  const { stepIndex, history, answerStep, completeOnboarding } =
+    useTitanStore();
   const [freeText, setFreeText] = useState("");
   const bodyRef = useRef<HTMLDivElement>(null);
 
@@ -40,30 +38,26 @@ export default function OnboardingPage() {
     setFreeText("");
   }
 
-  const pct = Math.round((stepIndex / onboardingSteps.length) * 100);
-  const hasChips = currentStep && currentStep.chips.length > 0;
-
   return (
-    <div className="flex h-dvh flex-col bg-bg">
-      {/* Progress bar */}
-      <div className="shrink-0 px-5 pb-3.5 pt-[18px]">
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[11px] font-bold text-text-dimmer">
-            {stepIndex}/{onboardingSteps.length}
-          </span>
-          <span className="text-[11px] font-bold text-accent">{pct}%</span>
-        </div>
-        <div className="h-[3px] overflow-hidden rounded-full bg-white/10">
-          <motion.div
-            className="h-full rounded-full bg-accent"
-            initial={{ width: 0 }}
-            animate={{ width: `${pct}%` }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-          />
-        </div>
+    <div className="flex h-dvh flex-col">
+      {/* progreso */}
+      <div className="flex shrink-0 gap-[5px] px-5 pb-3.5 pt-[18px]">
+        {onboardingSteps.map((_, i) => (
+          <div
+            key={i}
+            className="h-[3px] flex-1 overflow-hidden rounded-full bg-white/10"
+          >
+            <div
+              className="h-full rounded-full bg-accent transition-all duration-500"
+              style={{
+                width: i < stepIndex ? "100%" : i === stepIndex ? "40%" : "0%",
+              }}
+            />
+          </div>
+        ))}
       </div>
 
-      {/* Conversación */}
+      {/* conversación */}
       <div
         ref={bodyRef}
         className="flex flex-1 flex-col gap-4 overflow-y-auto px-5 pb-5 pt-2"
@@ -91,14 +85,16 @@ export default function OnboardingPage() {
               <TitanAvatar size={30} />
               <div className="rounded-[18px] rounded-tl-[4px] border border-border bg-glass-strong px-4 py-[13px] text-[14px] leading-[1.5]">
                 {turn.text.split("\n").map((line, j) => (
-                  <p key={j} className={j > 0 ? "mt-3" : ""}>{line}</p>
+                  <p key={j} className={j > 0 ? "mt-3" : ""}>
+                    {line}
+                  </p>
                 ))}
               </div>
             </motion.div>
           );
         })}
 
-        {/* Pregunta actual */}
+        {/* pregunta actual de Titan */}
         <AnimatePresence mode="wait">
           {currentStep && (
             <motion.div
@@ -112,22 +108,22 @@ export default function OnboardingPage() {
                 <TitanAvatar size={30} />
                 <div className="rounded-[18px] rounded-tl-[4px] border border-border bg-glass-strong px-4 py-[13px] text-[14px] leading-[1.5]">
                   {currentStep.question.split("\n").map((line, j) => (
-                    <p key={j} className={j > 0 ? "mt-3" : ""}>{line}</p>
+                    <p key={j} className={j > 0 ? "mt-3" : ""}>
+                      {line}
+                    </p>
                   ))}
                 </div>
               </div>
-              {hasChips && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.15 }}
-                  className="flex flex-wrap gap-2 pl-[40px]"
-                >
-                  {currentStep.chips.map((chip) => (
-                    <Chip key={chip} label={chip} onClick={() => handleAnswer(chip)} />
-                  ))}
-                </motion.div>
-              )}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.15 }}
+                className="flex flex-wrap gap-2"
+              >
+                {currentStep.chips.map((chip) => (
+                  <Chip key={chip} label={chip} onClick={() => handleAnswer(chip)} />
+                ))}
+              </motion.div>
             </motion.div>
           )}
 
@@ -141,15 +137,15 @@ export default function OnboardingPage() {
               <TitanAvatar size={30} />
               <div className="rounded-[18px] rounded-tl-[4px] border border-border bg-glass-strong px-4 py-[13px] text-[14px] leading-[1.5]">
                 Perfecto, ya te conozco lo suficiente para empezar. Estoy
-                preparando tu primera semana de entrenamiento y tu lista de la
-                compra — dame un segundo 🔧
+                preparando tu primera semana de entrenamiento y tu lista de
+                la compra — dame un segundo 🔧
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* Input */}
+      {/* input libre */}
       {!finished && (
         <form
           className="shrink-0 px-5 pb-[26px] pt-3.5"
@@ -162,15 +158,12 @@ export default function OnboardingPage() {
             <input
               value={freeText}
               onChange={(e) => setFreeText(e.target.value)}
-              placeholder={
-                currentStep?.freeTextPlaceholder ?? "Escribe tu respuesta..."
-              }
+              placeholder="Escribe tu respuesta..."
               className="flex-1 bg-transparent py-2 text-[14px] text-text placeholder:text-text-dimmer outline-none"
             />
             <button
               type="submit"
-              disabled={!freeText.trim()}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-[15px] font-extrabold text-black disabled:opacity-40"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-[15px] font-extrabold text-black"
             >
               ↑
             </button>

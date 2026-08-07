@@ -10,27 +10,23 @@ export function PillButton({
   variant = "primary",
   className,
   type = "button",
-  disabled,
 }: {
   children: ReactNode;
   onClick?: () => void;
-  variant?: "primary" | "secondary" | "ghost";
+  variant?: "primary" | "secondary";
   className?: string;
   type?: "button" | "submit";
-  disabled?: boolean;
 }) {
   return (
     <motion.button
       type={type}
       onClick={onClick}
-      disabled={disabled}
-      whileTap={{ scale: disabled ? 1 : 0.96 }}
+      whileTap={{ scale: 0.96 }}
       className={clsx(
-        "rounded-full px-5 py-[11px] text-[13px] font-bold transition-opacity",
-        variant === "primary" && "bg-accent text-black",
-        variant === "secondary" && "border border-border-strong bg-transparent text-text",
-        variant === "ghost" && "bg-transparent text-text-dim",
-        disabled && "opacity-40 cursor-not-allowed",
+        "rounded-full px-5 py-[11px] text-[13px] font-bold",
+        variant === "primary"
+          ? "bg-accent text-black"
+          : "border border-border-strong bg-transparent text-text",
         className
       )}
     >
