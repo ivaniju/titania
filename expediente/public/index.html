@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Expediente: prepara tu oposición a Policía Nacional, Guardia Civil o Policía Local con tests diarios, repaso de fallos y clasificación.">
+  <meta name="theme-color" content="#101a2e">
+  <title>Expediente</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+  <header class="cabecera">
+    <div class="cabecera-in">
+      <a class="marca" href="#/">Expediente</a>
+      <nav id="nav" class="nav" aria-label="Principal" hidden>
+        <a href="#/" data-nav="portada">Portada</a>
+        <a href="#/temario" data-nav="temario">Temario</a>
+        <a href="#/clasificacion" data-nav="clasificacion">Clasificación</a>
+        <button type="button" id="salir" class="enlace">Salir</button>
+      </nav>
+    </div>
+  </header>
+  <main id="contenido" tabindex="-1">
+    <noscript><p class="aviso-pagina">Expediente necesita JavaScript para funcionar.</p></noscript>
+  </main>
+  <div id="avisos" class="avisos" role="status" aria-live="polite"></div>
+</body>
+</html>
