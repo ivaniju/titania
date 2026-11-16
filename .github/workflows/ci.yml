@@ -1,0 +1,50 @@
+name: CI Expediente
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests y banco
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: expediente
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: expediente
+          POSTGRES_PASSWORD: expediente
+          POSTGRES_DB: expediente_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U expediente"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgres://expediente:expediente@127.0.0.1:5432/expediente_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: expediente/package-lock.json
+      - run: npm ci
+      - run: npm run check-bank
+      - run: npm test
+
+  image:
+    name: Build de la imagen
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t expediente:ci expediente

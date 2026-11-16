@@ -1,0 +1,18 @@
+{
+  "name": "expediente",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Plataforma de preparación de oposiciones (Policía Nacional, Guardia Civil, Policía Local)",
+  "type": "commonjs",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "migrate": "node scripts/migrate.js",
+    "test": "node --test --test-concurrency=1 \"test/*.test.js\"",
+    "check-bank": "node scripts/check-bank.js"
+  },
+  "dependencies": {
+    "pg": "^8.13.1"
+  }
+}

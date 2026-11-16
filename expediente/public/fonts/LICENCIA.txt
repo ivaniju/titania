@@ -1,0 +1,5 @@
+Bricolage Grotesque y Literata se distribuyen bajo la SIL Open Font License 1.1
+(https://openfontlicense.org). Los ficheros woff2 (subconjunto latino, peso variable)
+proceden de los paquetes @fontsource-variable/bricolage-grotesque y
+@fontsource-variable/literata. Se sirven desde el propio dominio para no depender
+de terceros ni abrir la CSP.
